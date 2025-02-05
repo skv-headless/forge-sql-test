@@ -8,10 +8,14 @@ const App = () => {
     invoke('getText', { example: 'my-invoke-variable' }).then(setData);
   }, []);
 
+  if (!data) return 'Loading...'
+
   return (
     <>
       <Text>Hello world!</Text>
-      <Text>{data ? data : 'Loading...'}</Text>
+      {data.rows.map((worklog) => {
+        return <Text>{worklog.id} {worklog.author_id}</Text>;
+      })}
     </>
   );
 };

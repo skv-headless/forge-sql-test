@@ -1,4 +1,7 @@
 modules:
+  sql:
+    - key: main
+      engine: mysql
   jira:globalPage:
     - key: sql-test-hello-world-global-page
       resource: main
