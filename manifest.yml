@@ -9,6 +9,13 @@ modules:
   function:
     - key: resolver
       handler: index.handler
+    - key: onInstall
+      handler: index.onInstall
+  trigger:
+    - key: onAppInstall
+      function: onInstall
+      events:
+        - avi:forge:installed:app
 resources:
   - key: main
     path: src/frontend/index.jsx
