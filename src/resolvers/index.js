@@ -5,27 +5,25 @@ import {getAllWorklogs} from "../consumer";
 
 const resolver = new Resolver();
 
-resolver.define('getText', async (req) => {
+resolver.define('getWorklogs', async (req) => {
   const results = await sql
     .prepare(`SELECT * FROM Worklogs;`)
     .execute();
+  const countResponse = await sql
+    .prepare(`SELECT COUNT(*) FROM Worklogs;`)
+    .execute();
 
-  return results;
+  return { results, count: countResponse.rows[0]['COUNT(*)'] };
 });
 
 resolver.define('runMigration', async (req) => {
   await runSchemaMigration();
-  const results = await sql
-    .prepare(`INSERT INTO Worklogs VALUES (?, ?, ?, ?, ?, ?, ?, ?,?)`)
-    .bindParams(null, new Date(),new Date(), 60, "6098d58e2614ec00681605ea", 1, 1, 1, 1)
-    .execute();
 
   return 'Hello, world!';
 });
 
 resolver.define('fetchWorklogs', async () => {
   const worklogs = await getAllWorklogs();
-  console.log('worklogs', worklogs.length);
 });
 
 export const handler = resolver.getDefinitions();

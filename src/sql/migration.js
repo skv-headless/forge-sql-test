@@ -4,8 +4,8 @@ import sql, { migrationRunner } from '@forge/sql';
 // The SQL statements should be idempotent.
 export const CREATE_WORKLOGS_TABLE = `CREATE TABLE IF NOT EXISTS Worklogs (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    jira_updated TIMESTAMP,
-    started_at TIMESTAMP,
+    jira_updated DATE,
+    started_at DATE,
     time_spent_seconds INT,
     author_id VARCHAR(200) NOT NULL,
     dataset_id INT,
@@ -14,9 +14,19 @@ export const CREATE_WORKLOGS_TABLE = `CREATE TABLE IF NOT EXISTS Worklogs (
     worklog_id INT
 )`;
 
+export const TRUNCATE_WORKLOGS = `TRUNCATE WORKLOGS`;
+
+export const UPDATE_WORKLOGS_TABLE = `ALTER TABLE Worklogs
+ADD CONSTRAINT WorklogId UNIQUE (worklog_id),
+MODIFY COLUMN started_at TIMESTAMP,
+MODIFY COLUMN jira_updated TIMESTAMP;
+`;
+
 
 const migrations = migrationRunner
-  .enqueue('v001_create_worklogs_table', CREATE_WORKLOGS_TABLE);
+  .enqueue('v001_create_worklogs_table', CREATE_WORKLOGS_TABLE)
+  .enqueue('v002_truncate_worklogs_table', TRUNCATE_WORKLOGS)
+  .enqueue('v003_update_worklogs_table', UPDATE_WORKLOGS_TABLE);
 
 // The function to run the migrations in response to Forge events and triggers.
 export const runSchemaMigration = async () => {

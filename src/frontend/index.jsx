@@ -5,17 +5,19 @@ import { invoke } from '@forge/bridge';
 const App = () => {
   const [data, setData] = useState(null);
   useEffect(() => {
-    invoke('getText', { example: 'my-invoke-variable' }).then(setData);
+    invoke('getWorklogs').then(setData);
   }, []);
 
   if (!data) return 'Loading...'
 
   return (
     <>
-      <Text>Hello world!</Text>
+      <Text>Count: {data.count}</Text>
       <Button onClick={() => invoke('fetchWorklogs')}>Fetch</Button>
-      {data.rows.map((worklog) => {
-        return <Text>{worklog.id} {worklog.author_id}</Text>;
+      <Button onClick={() => invoke('runMigration')}>Migrate</Button>
+
+      {data.results.rows.map((worklog) => {
+        return <Text>{worklog.worklog_id} {worklog.started_at}</Text>;
       })}
     </>
   );
