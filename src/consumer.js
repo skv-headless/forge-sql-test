@@ -5,17 +5,36 @@ const resolver = new Resolver();
 
 resolver.define("event-listener", async ({ payload, context }) => {
   console.log(payload);
-
-  const result = await api
-      .asApp()
-      .requestJira(route`rest/api/3/worklog/updated?since=0`);
-
-  const status = result.status;
-
-  console.log(status);
-
-  const data = await result.json();
-  console.log('==data', data);
+  const worklogs = await getAllWorklogs();
+  console.log('worklogs', worklogs);
 });
+
+export async function getAllWorklogs() {
+  const worklogs = [];
+  let isLast = false;
+  let currentSince = 0;
+
+  do {
+    const result = await api
+        .asApp()
+        .requestJira(route`rest/api/3/worklog/updated?since=${currentSince}`);
+    const data = await result.json();
+    const { values, until, lastPage } = data;
+
+    const worklogsResponse = await api
+        .asApp()
+        .requestJira(route`/rest/api/3/worklog/list`, {
+          method: "POST",
+          body: JSON.stringify({ ids: values.map(value => value.worklogId) })
+        });
+
+    const worklogsResults = await worklogsResponse.json();
+    worklogs.push(...worklogsResults);
+    isLast = lastPage;
+    currentSince = until;
+  } while (!isLast)
+
+  return worklogs;
+}
 
 export const handler = resolver.getDefinitions();

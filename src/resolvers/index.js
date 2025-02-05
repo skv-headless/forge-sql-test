@@ -1,6 +1,7 @@
 import Resolver from '@forge/resolver';
 import { runSchemaMigration } from "../sql/migration"
 import sql, { migrationRunner } from '@forge/sql';
+import {getAllWorklogs} from "../consumer";
 
 const resolver = new Resolver();
 
@@ -20,6 +21,11 @@ resolver.define('runMigration', async (req) => {
     .execute();
 
   return 'Hello, world!';
+});
+
+resolver.define('fetchWorklogs', async () => {
+  const worklogs = await getAllWorklogs();
+  console.log('worklogs', worklogs.length);
 });
 
 export const handler = resolver.getDefinitions();
