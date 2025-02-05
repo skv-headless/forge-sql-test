@@ -1,0 +1,18 @@
+modules:
+  jira:globalPage:
+    - key: sql-test-hello-world-global-page
+      resource: main
+      resolver:
+        function: resolver
+      render: native
+      title: sql-test
+  function:
+    - key: resolver
+      handler: index.handler
+resources:
+  - key: main
+    path: src/frontend/index.jsx
+app:
+  runtime:
+    name: nodejs22.x
+  id: ari:cloud:ecosystem::app/76385c38-aabc-4693-98ab-3c092ebe1f77
