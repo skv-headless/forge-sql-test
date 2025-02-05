@@ -11,11 +11,20 @@ modules:
       handler: index.handler
     - key: onInstall
       handler: index.onInstall
+    - key: consumer-function
+      handler: consumer.handler
+      timeoutSeconds: 600
   trigger:
     - key: onAppInstall
       function: onInstall
       events:
         - avi:forge:installed:app
+  consumer:
+    - key: worklog-fetch
+      queue: worklog-fetch
+      resolver:
+        function: consumer-function
+        method: event-listener
 resources:
   - key: main
     path: src/frontend/index.jsx
