@@ -1,3 +1,3 @@
 export { handler } from './resolvers';
 
-export { onInstall } from './resolvers/trigger'
+export { onInstall, onWorklogCreate } from './resolvers/trigger'
