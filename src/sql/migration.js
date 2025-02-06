@@ -51,7 +51,7 @@ export const runSchemaMigration = async () => {
   }
 };
 
-function getHttpResponse<Body>(statusCode: number, body: Body) {
+function getHttpResponse(statusCode, body) {
   let statusText = '';
   if (statusCode === 200) {
     statusText = 'Ok';

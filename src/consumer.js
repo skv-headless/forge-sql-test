@@ -1,16 +1,15 @@
 import Resolver from "@forge/resolver";
-import api, { route } from '@forge/api';
-import sql, { migrationRunner } from '@forge/sql';
+import api, {route} from '@forge/api';
+import {db, queryForgeSql, toTimestamp} from "./sql/db";
 
 const resolver = new Resolver();
 
 resolver.define("event-listener", async ({ payload, context }) => {
   console.log(payload);
-  const worklogs = await getAllWorklogs();
-  console.log('worklogs', worklogs);
+  await fetchAndInsertAllWorklogs();
 });
 
-export async function getAllWorklogs() {
+export async function fetchAndInsertAllWorklogs() {
   let isLast = false;
   let currentSince = 0;
 
@@ -30,15 +29,19 @@ export async function getAllWorklogs() {
 
     const worklogsResults = await worklogsResponse.json();
 
-    const toTimestamp = (date) => date.replace("T", " ").replace("t", " ").split("+")[0].split('.')[0];
+    const inserts = worklogsResults.map(worklog => ({
+      jira_updated: toTimestamp(worklog.updated),
+      started_at: toTimestamp(worklog.started),
+      time_spent_seconds: worklog.timeSpentSeconds,
+      author_id: worklog.author.accountId,
+      dataset_id: 1,
+      issue_id: worklog.issueId,
+      local_project_id: 1,
+      worklog_id: worklog.id
+    }));
 
-    const worklogValues = worklogsResults.map((worklog) => {
-      const { updated, started, timeSpentSeconds, author, issueId, id } = worklog;
-      return `('${toTimestamp(updated)}', '${toTimestamp(started)}', ${timeSpentSeconds}, '${author.accountId}', 1, ${issueId}, 1, ${id})`
-    });
-
-    //console.log(`REPLACE INTO Worklogs (jira_updated, started_at, time_spent_seconds, author_id, dataset_id, issue_id, local_project_id, worklog_id) VALUES ${worklogValues.join(", ")}`);
-    await sql.executeRaw(`REPLACE INTO Worklogs (jira_updated, started_at, time_spent_seconds, author_id, dataset_id, issue_id, local_project_id, worklog_id) VALUES ${worklogValues.join(", ")}`)
+    const insertQuery = db('Worklogs').insert(inserts).onConflict('worklog_id').merge();
+    await queryForgeSql(insertQuery)
 
     isLast = lastPage;
     currentSince = until;

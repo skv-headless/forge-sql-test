@@ -1,5 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import ForgeReconciler, {Button, Text, DatePicker, Inline, DynamicTable, InlineEdit, Textfield, Box, xcss} from '@forge/react';
+import ForgeReconciler, {
+    Button,
+    Text,
+    DatePicker,
+    Inline,
+    DynamicTable,
+    InlineEdit,
+    Textfield,
+    Box,
+    xcss,
+    Stack
+} from '@forge/react';
 import { invoke } from '@forge/bridge';
 
 
@@ -65,7 +76,7 @@ const App = () => {
         ] }));
 
   return (
-    <>
+    <Stack space="space.100">
       <InlineEdit
         defaultValue=""
         label="SQL"
@@ -82,6 +93,7 @@ const App = () => {
           console.log(res);
         }}
       />
+
       <Inline alignBlock="center" space="space.100">
         <Text>Start at</Text>
         <DatePicker value={startAt} onChange={setStartAt} maxDate={endAt}/>
@@ -90,12 +102,16 @@ const App = () => {
         <Button onClick={handleSearch}>Search</Button>
       </Inline>
 
-      <Text>Count: {data.count}</Text>
-      <Button onClick={() => invoke('fetchWorklogs')}>Fetch</Button>
-      <Button onClick={() => invoke('runMigration')}>Migrate</Button>
+      <Stack space="space.100">
+        <Inline space="space.100">
+          <Button onClick={() => invoke('fetchWorklogs')}>Fetch</Button>
+          <Button onClick={() => invoke('runMigration')}>Migrate</Button>
+        </Inline>
+        <Text>Count: {data.count}</Text>
+      </Stack>
 
       <DynamicTable rows={rows} head={getHeader()} isLoading={isLoading}/>
-    </>
+    </Stack>
   );
 };
 

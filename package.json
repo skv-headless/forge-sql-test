@@ -12,12 +12,26 @@
     "eslint-plugin-react-hooks": "^4.6.0"
   },
   "dependencies": {
+    "@azure/app-configuration": "^1.8.0",
+    "@azure/keyvault-secrets": "^4.9.0",
     "@forge/api": "^4.2.0",
     "@forge/bridge": "4.3.0",
     "@forge/events": "^0.9.7",
     "@forge/react": "^10.10.3",
     "@forge/resolver": "1.6.5-next.0",
     "@forge/sql": "^2.3.1",
-    "react": "^18.2.0"
+    "better-sqlite3": "^11.8.1",
+    "knex": "^3.1.0",
+    "mysql": "^2.18.1",
+    "mysql2": "^3.12.0",
+    "oci-common": "^2.102.0",
+    "oci-objectstorage": "^2.102.0",
+    "oci-secrets": "^2.102.0",
+    "oracledb": "^6.7.1",
+    "pg": "^8.13.1",
+    "pg-query-stream": "^4.7.1",
+    "react": "^18.2.0",
+    "sqlite3": "^5.1.7",
+    "tedious": "^18.6.1"
   }
 }
