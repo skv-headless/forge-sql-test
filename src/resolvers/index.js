@@ -35,6 +35,12 @@ resolver.define('runMigration', async (req) => {
   return 'Hello, world!';
 });
 
+resolver.define('sqlDebug', async (req) => {
+  const response = await sql.prepare(req.payload.sql).execute();
+
+  return response;
+});
+
 resolver.define('fetchWorklogs', async () => {
   const worklogs = await getAllWorklogs();
 });

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import ForgeReconciler, {Button, Text, DatePicker, Inline, DynamicTable} from '@forge/react';
+import ForgeReconciler, {Button, Text, DatePicker, Inline, DynamicTable, InlineEdit, Textfield, Box, xcss} from '@forge/react';
 import { invoke } from '@forge/bridge';
+
 
 const getHeader = () => (
     { cells: [
@@ -27,19 +28,19 @@ const getHeader = () => (
         ]});
 
 const App = () => {
-  const [startAt, setStartAt] = useState('2024-02-05 00:00:00');
+  const [startAt, setStartAt] = useState('2025-02-01 00:00:00');
   const [endAt, setEndAt] = useState('2025-02-06 00:00:00');
   const [data, setData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-      setIsLoading(true);
-    invoke('getWorklogs').then(setData).then(() => setIsLoading(false));
+    setIsLoading(true);
+    invoke('searchWorklogs', { startAt, endAt }).then(setData).then(() => setIsLoading(false));
   }, []);
 
   const handleSearch = () => {
-      setIsLoading(true);
-      invoke('searchWorklogs', { startAt, endAt }).then(setData).then(() => setIsLoading(false));
+    setIsLoading(true);
+    invoke('searchWorklogs', { startAt, endAt }).then(setData).then(() => setIsLoading(false));
   }
 
   if (!data) return 'Loading...'
@@ -65,6 +66,22 @@ const App = () => {
 
   return (
     <>
+      <InlineEdit
+        defaultValue=""
+        label="SQL"
+        editView={({ errorMessage, ...fieldProps }) => (
+          <Textfield {...fieldProps} autoFocus />
+        )}
+        readView={() => (
+          <Box xcss={xcss({paddingInline: "space.075", paddingBlock: "space.100"})}>
+            SQL
+          </Box>
+        )}
+        onConfirm={async (value) => {
+          const res = await invoke('sqlDebug', { sql: value })
+          console.log(res);
+        }}
+      />
       <Inline alignBlock="center" space="space.100">
         <Text>Start at</Text>
         <DatePicker value={startAt} onChange={setStartAt} maxDate={endAt}/>
