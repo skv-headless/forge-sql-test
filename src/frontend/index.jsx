@@ -6,7 +6,17 @@ const getHeader = () => (
     { cells: [
             {
                 key: 'Id',
-                content: <Text>Id</Text>,
+                content: <Text>Worklog Id</Text>,
+                width: 16,
+            },
+            {
+                key: 'issueId',
+                content: <Text>Issue Id</Text>,
+                width: 16,
+            },
+            {
+                key: 'timeSpent',
+                content: <Text>Time Spent</Text>,
                 width: 16,
             },
             {
@@ -38,6 +48,14 @@ const App = () => {
             {
                 key: worklog.worklog_id,
                 content: <Text>{worklog.worklog_id}</Text>,
+            },
+            {
+                key: worklog.issue_id,
+                content: <Text>{worklog.issue_id}</Text>,
+            },
+            {
+                key: worklog.time_spent_seconds,
+                content: <Text>{worklog.time_spent_seconds}</Text>,
             },
             {
                 key: worklog.started_at,
