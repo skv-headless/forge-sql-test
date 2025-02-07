@@ -2,6 +2,6 @@
 + async task that will download all worklogs
 + calendar picker with date range
 - load 1M worklogs
-- webhook handler
++ webhook handler
 + sql console
-- ORM or query helper
++ ORM or query helper

@@ -22,11 +22,13 @@ MODIFY COLUMN started_at TIMESTAMP,
 MODIFY COLUMN jira_updated TIMESTAMP;
 `;
 
+export const ADD_STARTED_AT_INDEX_TO_WORKLOGS = `CREATE INDEX started_at_worklogs ON Worklogs (started_at);`;
 
 const migrations = migrationRunner
   .enqueue('v001_create_worklogs_table', CREATE_WORKLOGS_TABLE)
   .enqueue('v002_truncate_worklogs_table', TRUNCATE_WORKLOGS)
-  .enqueue('v003_update_worklogs_table', UPDATE_WORKLOGS_TABLE);
+  .enqueue('v003_update_worklogs_table', UPDATE_WORKLOGS_TABLE)
+  .enqueue('v004_add_started_at_worklogs_index', ADD_STARTED_AT_INDEX_TO_WORKLOGS);
 
 // The function to run the migrations in response to Forge events and triggers.
 export const runSchemaMigration = async () => {
